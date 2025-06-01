@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aventura en la Laguna</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-image: url('background.png');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-color: black;
+      color: white;
+      position: relative;
+      transition: background-image 0.5s ease-in-out;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .character-selection {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+    }
+    .character {
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .character:hover {
+      transform: scale(1.1);
+    }
+    .character img {
+      width: 250px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border: 5px solid #2c3e50;
+    }
+    .character p {
+      font-size: 24px;
+      margin-top: 15px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    #gameTitle {
+      font-size: 36px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
+      padding: 20px 40px;
+      background-color: rgba(44, 62, 80, 0.8);
+      border-radius: 15px;
+      border: 3px solid #2c3e50;
+      z-index: 10;
+    }
+    #gameTitle::before,
+    #gameTitle::after {
+      content: '🌿';
+      position: absolute;
+      font-size: 24px;
+      animation: floatLeaf 3s ease-in-out infinite;
+    }
+    #gameTitle::before {
+      left: -30px;
+      top: -20px;
+      animation-delay: 0s;
+    }
+    #gameTitle::after {
+      right: -30px;
+      bottom: -20px;
+      animation-delay: 1.5s;
+    }
+    @keyframes floatLeaf {
+      0% {
+        transform: rotate(0deg) translateY(0);
+      }
+      50% {
+        transform: rotate(15deg) translateY(-10px);
+      }
+      100% {
+        transform: rotate(0deg) translateY(0);
+      }
+    }
+    .leaf {
+      display: none;
+    }
+    .status-button {
+      display: none;
+      position: absolute;
+      bottom: 50px;
+      left: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #0073e6;
+      color: white;
+      cursor: pointer;
+    }
+    .status-image {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60vw;
+      max-width: 600px;
+      min-width: 300px;
+      z-index: 15;
+      border: 8px solid #2c3e50;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(44, 62, 80, 0.3),
+                  0 0 40px rgba(44, 62, 80, 0.2),
+                  0 0 60px rgba(44, 62, 80, 0.1);
+      animation: framePulse 2s infinite, floatImage 3s ease-in-out infinite;
+    }
+    .options {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      color: black;
+      z-index: 20;
+    }
+    .options button {
+      display: block;
+      width: 90%;
+      max-width: 200px;
+      margin: 10px auto;
+      font-size: 1.2rem;
+    }
+    .doubt-image,
+    .selfie-image,
+    .swim-warning-image,
+    .sick-image {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw;
+      max-width: 500px;
+      min-width: 200px;
+      z-index: 10;
+    }
+    .decision-sign,
+    .swim-warning-text {
+      display: none;
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 0, 0, 0.85);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      font-size: 20px;
+      max-width: 90%;
+      z-index: 10;
+    }
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ff914d;
+      color: white;
+      cursor: pointer;
+      display: none;
+      z-index: 10;
+    }
+    .warning-message {
+      display: none;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 18px;
+      max-width: 90%;
+      z-index: 10;
+    }
+    #happySign {
+      display: none;
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 128, 0, 0.85);
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 22px;
+      color: white;
+      z-index: 15;
+      cursor: pointer;
+    }
+    .sick-image {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      z-index: 10;
+    }
+    .blur-background {
+      position: relative;
+    }
+    .blur-background::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+    .blur-background::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      z-index: 4;
+    }
+    .investigate-button {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      padding: 15px 30px;
+      font-size: 24px;
+      border: none;
+      border-radius: 10px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+    .investigate-button:hover {
+      background-color: #34495e;
+      transform: translateY(-50%) scale(1.05);
+    }
+    .status-result-image {
+      display: none;
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70vw;
+      max-width: 700px;
+      min-width: 400px;
+      z-index: 15;
+      border: 12px solid #2c3e50;
+      border-radius: 25px;
+      box-shadow: 0 0 30px rgba(44, 62, 80, 0.4),
+                  0 0 60px rgba(44, 62, 80, 0.3),
+                  0 0 90px rgba(44, 62, 80, 0.2);
+      animation: statusGlow 2s infinite, statusScale 3s ease-in-out infinite;
+    }
+    .micro-image {
+      display: none;
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 35vw;
+      max-width: 350px;
+      min-width: 180px;
+      z-index: 15;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .micro-image:hover {
+      transform: translateX(-50%) scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    }
+    .micro-image.spinning {
+      animation: spinAndZoom 1.5s ease-in-out forwards;
+    }
+    @keyframes spinAndZoom {
+      0% {
+        transform: translateX(-50%) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      25% {
+        transform: translateX(-50%) rotate(180deg) scale(1.2);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateX(-50%) rotate(360deg) scale(0.8);
+        opacity: 0.6;
+      }
+      75% {
+        transform: translateX(-50%) rotate(540deg) scale(0.6);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateX(-50%) rotate(720deg) scale(0);
+        opacity: 0;
+      }
+    }
+    .micro-image::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .micro-image:hover::before {
+      opacity: 1;
+    }
+    .micro-image::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .micro-image:hover::after {
+      opacity: 1;
+    }
+    .continue-button {
+      display: none;
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      font-size: 24px;
+      border: none;
+      border-radius: 10px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+    .continue-button:hover {
+      background-color: #34495e;
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    @keyframes floatImage {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -52%) scale(1.02);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes framePulse {
+      0% {
+        box-shadow: 0 0 20px rgba(44, 62, 80, 0.3),
+                    0 0 40px rgba(44, 62, 80, 0.2),
+                    0 0 60px rgba(44, 62, 80, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(44, 62, 80, 0.4),
+                    0 0 50px rgba(44, 62, 80, 0.3),
+                    0 0 70px rgba(44, 62, 80, 0.2);
+      }
+      100% {
+        box-shadow: 0 0 20px rgba(44, 62, 80, 0.3),
+                    0 0 40px rgba(44, 62, 80, 0.2),
+                    0 0 60px rgba(44, 62, 80, 0.1);
+      }
+    }
+
+    @keyframes statusGlow {
+      0% {
+        box-shadow: 0 0 30px rgba(44, 62, 80, 0.4),
+                    0 0 60px rgba(44, 62, 80, 0.3),
+                    0 0 90px rgba(44, 62, 80, 0.2);
+        border-color: #2c3e50;
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(44, 62, 80, 0.6),
+                    0 0 80px rgba(44, 62, 80, 0.5),
+                    0 0 120px rgba(44, 62, 80, 0.4);
+        border-color: #34495e;
+      }
+      100% {
+        box-shadow: 0 0 30px rgba(44, 62, 80, 0.4),
+                    0 0 60px rgba(44, 62, 80, 0.3),
+                    0 0 90px rgba(44, 62, 80, 0.2);
+        border-color: #2c3e50;
+      }
+    }
+
+    @keyframes statusScale {
+      0% {
+        transform: translateX(-50%) scale(1);
+      }
+      50% {
+        transform: translateX(-50%) scale(1.05);
+      }
+      100% {
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    .status-image::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      right: -12px;
+      bottom: -12px;
+      border: 2px solid rgba(44, 62, 80, 0.2);
+      border-radius: 24px;
+      z-index: -1;
+      animation: rotateBorder 10s linear infinite;
+    }
+
+    @keyframes rotateBorder {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .status-image::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 2px solid rgba(44, 62, 80, 0.1);
+      border-radius: 16px;
+      z-index: -1;
+      animation: rotateBorder 8s linear infinite reverse;
+    }
+
+    .status-result-image::before {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: -16px;
+      right: -16px;
+      bottom: -16px;
+      border: 4px solid rgba(44, 62, 80, 0.3);
+      border-radius: 32px;
+      z-index: -1;
+      animation: rotateBorder 10s linear infinite;
+    }
+
+    .status-result-image::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border: 4px solid rgba(44, 62, 80, 0.2);
+      border-radius: 24px;
+      z-index: -1;
+      animation: rotateBorder 8s linear infinite reverse;
+    }
+
+    .micro-explanation {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%);
+      width: 35vw;
+      max-width: 350px;
+      min-width: 180px;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      font-size: 16px;
+      line-height: 1.6;
+      z-index: 15;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .micro-species {
+      display: none;
+      position: absolute;
+      bottom: 5%;
+      right: 10%;
+      transform: translateX(0);
+      width: 35vw;
+      max-width: 350px;
+      min-width: 180px;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      font-size: 16px;
+      text-align: center;
+      z-index: 15;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .micro-explanation:hover, .micro-species:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .lab-micro-image {
+      display: inline-block;
+      width: 40vw;
+      max-width: 400px;
+      min-width: 200px;
+      margin: 20px 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(44, 62, 80, 0.3);
+      position: relative;
+      overflow: hidden;
+      border: 15px solid #2c3e50;
+      background-color: #2c3e50;
+    }
+
+    .lab-micro-image::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .lab-micro-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+    }
+
+    .lab-micro-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .microscope-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 50px;
+      gap: 40px;
+    }
+
+    .microscope-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 40vw;
+      max-width: 400px;
+    }
+
+    .magnification-label {
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .micro-explanation-text {
+      background-color: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 15px;
+      border-radius: 15px;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .return-button {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+
+    .warning-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      display: none;
+    }
+
+    .warning-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 50px;
+    }
+
+    .warning-image {
+      width: 80vw;
+      max-width: 800px;
+      border: 8px solid #ff0000;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    }
+
+    .warning-text {
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      font-size: 24px;
+      text-align: center;
+      max-width: 800px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      border: 3px solid white;
+      animation: pulse 2s infinite;
+      margin: 0 20px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      }
+    }
+
+    .sandwich-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      display: none;
+    }
+
+    .sandwich-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 50px;
+    }
+
+    .sandwich-text {
+      background-color: rgba(0, 128, 0, 0.9);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      font-size: 24px;
+      text-align: center;
+      max-width: 800px;
+      box-shadow: 0 0 20px rgba(0, 128, 0, 0.3);
+      border: 3px solid white;
+      animation: pulse 2s infinite;
+      margin: 0 20px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(0, 128, 0, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(0, 128, 0, 0.5);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(0, 128, 0, 0.3);
+      }
+    }
+
+    .selfie-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 10;
+    }
+
+    .selfie-text {
+      display: none;
+      position: fixed;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 128, 0, 0.85);
+      padding: 20px 40px;
+      border-radius: 15px;
+      font-size: 24px;
+      color: white;
+      z-index: 15;
+      cursor: pointer;
+      text-align: center;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 0 20px rgba(0, 128, 0, 0.3);
+      border: 3px solid white;
+      animation: pulse 2s infinite;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+    }
+
+    .selfie-time-button {
+      display: none;
+      position: fixed;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      padding: 20px 40px;
+      font-size: 28px;
+      border: none;
+      border-radius: 15px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+
+    .selfie-time-button:hover {
+      background-color: #34495e;
+      transform: translateY(-50%) scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .selfie-time-background {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 5;
+    }
+
+    /* Add new welcome page styles */
+    .welcome-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 50px 0;
+      overflow: hidden;
+    }
+
+    .welcome-title {
+      font-size: 48px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+      text-align: center;
+      animation: titleGlow 2s infinite;
+    }
+
+    .welcome-animation {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      height: 400px;
+      margin: 20px 0;
+    }
+
+    .cat {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background-image: url('gatito.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      left: 15%;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: catPlay 3s infinite;
+    }
+
+    .dog {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background-image: url('perrito.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      right: 15%;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: dogPlay 3s infinite;
+    }
+
+    @keyframes catPlay {
+      0% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-50%) rotate(-15deg) translateX(-10px);
+      }
+      50% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+      75% {
+        transform: translateY(-50%) rotate(15deg) translateX(10px);
+      }
+      100% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+    }
+
+    @keyframes dogPlay {
+      0% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-50%) rotate(15deg) translateX(10px);
+      }
+      50% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+      75% {
+        transform: translateY(-50%) rotate(-15deg) translateX(-10px);
+      }
+      100% {
+        transform: translateY(-50%) rotate(0deg);
+      }
+    }
+
+    .ball {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('ball.png'); /* We'll replace this with your ball image */
+      background-size: contain;
+      background-repeat: no-repeat;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      animation: ballBounce 2s infinite;
+    }
+
+    @keyframes ballBounce {
+      0% {
+        transform: translate(-50%, -50%) translateX(-200px);
+      }
+      25% {
+        transform: translate(-50%, -100%) translateX(0px);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateX(200px);
+      }
+      75% {
+        transform: translate(-50%, -100%) translateX(0px);
+      }
+      100% {
+        transform: translate(-50%, -50%) translateX(-200px);
+      }
+    }
+
+    .start-button {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 50px;
+    }
+
+    .start-button:hover {
+      transform: scale(1.05);
+      background-color: #34495e;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="gameTitle">¡Bienvenido a la Aventura en la Laguna!</h1>
+  <h2 id="characterSelection">Elige tu personaje</h2>
+  <div class="character-selection">
+    <div class="character" onclick="playSound('gatitoSound');startGame('gatito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('gatito')" role="button" aria-label="Seleccionar Gatito">
+      <img src="gatito.png" alt="Gatito" />
+      <p>Gatito</p>
+    </div>
+    <div class="character" onclick="playSound('perritoSound');startGame('perrito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('perrito')" role="button" aria-label="Seleccionar Perrito">
+      <img src="perrito.png" alt="Perrito" />
+      <p>Perrito</p>
+    </div>
+  </div>
+
+  <button class="status-button" id="statusButton" onclick="showRandomLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') showRandomLagoonStatus()" role="button" aria-label="Ver estado de la laguna">🌊 ESTADO DE LA LAGUNA</button>
+  <button class="investigate-button" id="investigateButton" onclick="showLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') showLagoonStatus()" role="button" aria-label="Investigar estado de la laguna">🔬 INVESTIGUEMOS!</button>
+  <button class="continue-button" id="continueButton" onclick="showOptions()" tabindex="0" onkeydown="if(event.key === 'Enter') showOptions()" role="button" aria-label="Continuar">CONTINUAR</button>
+  <button class="back-button" id="backButton" onclick="resetGame()" tabindex="0" onkeydown="if(event.key === 'Enter') resetGame()" role="button" aria-label="Volver al menú">🔙 Volver al menú</button>
+
+  <img id="lagoonImage" class="status-image" src="" alt="Estado de la Laguna" onclick="hideLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') hideLagoonStatus()" role="button" aria-label="Ocultar estado de la laguna" />
+  <img id="statusResultImage" class="status-result-image" src="" alt="Resultado del estado de la Laguna" />
+  <img id="microImage" class="micro-image" src="" alt="Imagen microscópica" onclick="switchMicroView()" />
+  <img id="microImage100x" class="micro-image" src="" alt="Imagen microscópica 100x" style="display: none;" onclick="switchMicroView()" />
+  <img id="plantImage100x" class="micro-image" src="" alt="Imagen microscópica planta 100x" style="display: none;" onclick="switchMicroView()" />
+
+  <div class="options" id="optionsSign">
+    <p>¿Qué quieres hacer?</p>
+    <button onclick="chooseAction('Pescar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Pescar')" role="button" aria-label="Pescar">🎣 Pescar</button>
+    <button onclick="chooseAction('Nadar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Nadar')" role="button" aria-label="Nadar">🏊 Nadar</button>
+    <button onclick="chooseAction('Tomar agua')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Tomar agua')" role="button" aria-label="Tomar agua">💧 Tomar agua</button>
+    <button onclick="chooseAction('Sacarse una selfie')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Sacarse una selfie')" role="button" aria-label="Sacarse una selfie">📸 Sacarse una selfie</button>
+  </div>
+
+  <img id="doubtImage" class="doubt-image" src="" alt="Duda del personaje" />
+  <div id="selfieContainer" class="selfie-container"></div>
+  <img id="swimWarningImage" class="swim-warning-image" src="" alt="Advertencia de nado" onclick="hideSwimWarning()" tabindex="0" onkeydown="if(event.key === 'Enter') hideSwimWarning()" role="button" aria-label="Ocultar advertencia de nado" />
+  <img id="sickImage" class="sick-image" src="" alt="Personaje enfermo" onclick="hideSickImage()" tabindex="0" onkeydown="if(event.key === 'Enter') hideSickImage()" role="button" aria-label="Ocultar imagen de enfermedad" />
+
+  <div id="decisionSign" class="decision-sign">
+    <p>¿Lo como o no lo como?</p>
+    <button onclick="eatFish()" tabindex="0" onkeydown="if(event.key === 'Enter') eatFish()" role="button" aria-label="Comer el pescado">Lo como</button>
+    <button onclick="hideDecision()" tabindex="0" onkeydown="if(event.key === 'Enter') hideDecision()" role="button" aria-label="No comer el pescado">No lo como</button>
+  </div>
+
+  <div id="swimWarningText" class="swim-warning-text" onclick="hideSwimWarning()" tabindex="0" onkeydown="if(event.key === 'Enter') hideSwimWarning()" role="button" aria-label="Ocultar advertencia de nado">
+    NADAR EN UNA LAGUNA CON FLORACIÓN SIN RESPETAR EL CIANOSEMAFORO PUEDE CAUSAR DERMATITIS SEVERA Y MALESTAR GENERAL.
+  </div>
+
+  <div id="warningMessage" class="warning-message">
+    CUANDO EL CIANOSEMAFORO ESTÁ ROJO, ES PELIGROSO CONSUMIR RECURSOS DE LA LAGUNA.
+  </div>
+
+  <div id="happySign" onclick="hideHappySign()" tabindex="0" onkeydown="if(event.key === 'Enter') hideHappySign()" role="button" aria-label="Ocultar mensaje de felicidad">
+    <p id="happyText"></p>
+  </div>
+
+  <div id="microExplanation" class="micro-explanation">
+    Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+  </div>
+  <div id="microSpecies" class="micro-species">
+    <i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas
+  </div>
+
+  <!-- New elements for lab view -->
+  <div id="labView" style="display: none;">
+    <div class="microscope-container">
+      <div class="microscope-view">
+        <div class="magnification-label">10x</div>
+        <div class="lab-micro-image">
+          <img id="labMicro10x" src="micro10x.png" alt="Microscopio 10x" />
+        </div>
+        <div class="micro-explanation-text">
+          Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+        </div>
+      </div>
+      <div class="microscope-view">
+        <div class="magnification-label">100x</div>
+        <div class="lab-micro-image">
+          <img id="labMicro100x" src="micro100x.png" alt="Microscopio 100x" />
+        </div>
+        <div class="micro-explanation-text" id="labMicroSpecies">
+          <i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas
+        </div>
+      </div>
+    </div>
+    <div class="microscope-container" style="display: none;">
+      <div class="microscope-view">
+        <div class="magnification-label">10x</div>
+        <div class="lab-micro-image">
+          <img id="labPlant10x" src="plant10x.png" alt="Planta 10x" />
+        </div>
+        <div class="micro-explanation-text">
+          Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+        </div>
+      </div>
+      <div class="microscope-view">
+        <div class="magnification-label">100x</div>
+        <div class="lab-micro-image">
+          <img id="labPlant100x" src="plant100x.png" alt="Planta 100x" />
+        </div>
+        <div class="micro-explanation-text" id="labPlantSpecies">
+          <i>Planktothrix agardhii</i> es una cianobacteria productora de toxinas, cuya floracion se destaca en invierno ❄️
+        </div>
+      </div>
+    </div>
+    <button id="returnToLagoon" class="return-button" onclick="returnToLagoon()">Volvamos a la laguna 🌊 😄</button>
+  </div>
+
+  <!-- Audio elements for sound effects and background music -->
+  <audio id="backgroundMusic" src="forest.wav" loop preload="auto"></audio>
+  <audio id="gatitoSound" src="miau.wav"></audio>
+  <audio id="perritoSound" src="guaf.wav"></audio>
+  <audio id="splashSound" src="splash.mp3"></audio>
+  <audio id="cameraSound" src="camera.mp3"></audio>
+  <audio id="gulpSound" src="gulp.mp3"></audio>
+  <audio id="coughSound" src="cough.mp3"></audio>
+  <audio id="ghostSound" src="ghost.mp3"></audio>
+  <audio id="dingSound" src="ding.mp3"></audio>
+
+  <!-- Add warning container -->
+  <div id="warningContainer" class="warning-container">
+    <div id="warningContent" class="warning-content">
+      <div class="warning-text">
+        ⚠️ Es muy peligroso consumir recursos de una laguna con floración de cianobacterias ya que las toxinas nos pueden enfermar gravemente 🏥
+      </div>
+    </div>
+  </div>
+
+  <!-- Add alert sound -->
+  <audio id="alertSound" src="alerta.wav"></audio>
+
+  <!-- Add sandwich container -->
+  <div id="sandwichContainer" class="sandwich-container">
+    <div id="sandwichContent" class="sandwich-content">
+      <div class="sandwich-text">
+        🥪 Cuando vamos a la naturaleza, siempre bueno llevar comida desde casa para no arriesgarnos 😊
+      </div>
+    </div>
+  </div>
+
+  <!-- Add applause sound -->
+  <audio id="applauseSound" src="aplauso.wav"></audio>
+
+  <div id="selfieText" class="selfie-text">
+    Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet 📸 😊 🤳
+  </div>
+
+  <button id="selfieTimeButton" class="selfie-time-button">SELFIE TIME</button>
+  <div id="selfieTimeBackground" class="selfie-time-background"></div>
+
+  <script>
+    let selectedCharacter = "";
+    let lagoonStatus = "";
+    let dockBackground = "";
+  
+    window.onload = function() {
+      playSound('backgroundMusic');
+    };
+  
+    function loadImage(src, altSrc) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve(src);
+        img.onerror = () => resolve(altSrc || 'fallback.png');
+      });
+    }
+
+    function playSound(soundId) {
+      const sound = document.getElementById(soundId);
+      sound.play().catch(() => console.log("Sound playback failed"));
+    }
+
+    function stopBackgroundMusic() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+    }
+
+    function startGame(character) {
+      selectedCharacter = character;
+      // Hide both the character selection container and the heading
+      document.getElementById('characterSelection').style.display = "none";
+      document.querySelector('.character-selection').style.display = "none";
+      document.getElementById('gameTitle').style.display = "none";
+      document.getElementById('statusButton').style.display = "block";
+      
+      // Change background based on character selection
+      if (character === 'gatito') {
+        document.body.style.backgroundImage = "url('muelle_gatito.png')";
+      } else if (character === 'perrito') {
+        document.body.style.backgroundImage = "url('muelle_perrito.png')";
+      }
+      
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      
+      dockBackground = document.body.style.backgroundImage;
+    }
+
+    async function showRandomLagoonStatus() {
+      const images = ["cianored.png", "cianoyellow.png", "cianogreen.png"];
+      const randomIndex = Math.floor(Math.random() * 3); // Ensure we get 0, 1, or 2
+      lagoonStatus = images[randomIndex];
+      console.log('Selected lagoon status:', lagoonStatus); // Add logging to debug
+      const validSrc = await loadImage(lagoonStatus, 'fallback.png');
+      document.getElementById('lagoonImage').src = validSrc;
+      document.getElementById('lagoonImage').style.display = "block";
+      document.getElementById('statusButton').style.display = "none";
+      document.getElementById('investigateButton').style.display = "block";
+    }
+  
+    function showLagoonStatus() {
+      document.getElementById('investigateButton').style.display = "none";
+      document.getElementById('lagoonImage').style.display = "none";
+      let resultImage = "";
+      let microImg = selectedCharacter === 'gatito' ? 'gatitomicro.png' : 'perritomicro.png';
+      let microImg100x = 'Micro100x.png';
+      let plantImg100x = 'plant100x.png';
+      let backgroundImage = "";
+      
+      console.log('Loading micro images:', { microImg, microImg100x, plantImg100x });
+      
+      if (lagoonStatus === "cianored.png") {
+        resultImage = "red.png";
+        backgroundImage = "greenlake.png";
+      } else if (lagoonStatus === "cianoyellow.png") {
+        resultImage = "amarillo.png";
+        backgroundImage = "yellowlake.png";
+        // Store the yellow status images for later use
+        window.yellowMicro10x = "amarillo10x.png";
+        window.yellowMicro100x = "amarillo100x.png";
+        document.getElementById('microExplanation').innerHTML = "Cuando el cianosemaforo es amarillo, en una gota de laguna bajo el microscopio podemos ver una gran diversidad pero las colonias de <i>Microcystis</i> sp ya empiecen a superar en número al resto";
+      } else if (lagoonStatus === "cianogreen.png") {
+        resultImage = "green.gif";
+        backgroundImage = "bluelake.png";
+        // Store the green status images for later use
+        window.greenMicro10x = "verde10x.png";
+        window.greenMicro100x = "verde100x.png";
+      }
+      
+      document.body.style.backgroundImage = `url('${backgroundImage}')`;
+      document.getElementById('statusResultImage').src = resultImage;
+      document.getElementById('statusResultImage').style.display = "block";
+      document.getElementById('backButton').style.display = "block";
+      
+      // Load micro images with error handling
+      const micro10x = document.getElementById('microImage');
+      const micro100x = document.getElementById('microImage100x');
+      const plant100x = document.getElementById('plantImage100x');
+      
+      // Load 10x image
+      micro10x.onerror = function() {
+        console.error('Failed to load 10x micro image:', microImg);
+      };
+      micro10x.src = microImg;
+      micro10x.style.display = "block";
+      
+      // For yellow status, prepare for transition
+      if (lagoonStatus === "cianoyellow.png") {
+        micro100x.onerror = function() {
+          console.error('Failed to load 100x micro image:', window.yellowMicro100x);
+        };
+        micro100x.src = window.yellowMicro100x;
+        micro100x.style.display = "none"; // Initially hidden
+        document.getElementById('microExplanation').style.display = "none"; // Initially hidden
+        document.getElementById('continueButton').style.display = "none"; // Initially hidden
+      } else {
+        // Randomly choose between micro100x and plant100x for other statuses
+        const showPlant = Math.random() < 0.5;
+        
+        // Load 100x images
+        micro100x.onerror = function() {
+          console.error('Failed to load 100x micro image:', microImg100x);
+        };
+        micro100x.src = microImg100x;
+        
+        plant100x.onerror = function() {
+          console.error('Failed to load 100x plant image:', plantImg100x);
+        };
+        plant100x.src = plantImg100x;
+        
+        // Store which image was selected for use in switchMicroView
+        window.current100xImage = showPlant ? 'plant' : 'micro';
+      }
+    }
+  
+    function showOptions() {
+      document.getElementById('continueButton').style.display = "none";
+      document.getElementById('statusResultImage').style.display = "none";
+      document.getElementById('microImage').style.display = "none";
+      document.getElementById('microImage100x').style.display = "none";
+      document.getElementById('microExplanation').style.display = "none";
+      document.getElementById('microSpecies').style.display = "none";
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    function hideLagoonStatus() {
+      document.getElementById('lagoonImage').style.display = "none";
+      document.getElementById('statusResultImage').style.display = "none";
+      document.getElementById('microImage').style.display = "none";
+      document.getElementById('microImage100x').style.display = "none";
+      document.getElementById('microExplanation').style.display = "none";
+      document.getElementById('microSpecies').style.display = "none";
+      document.getElementById('continueButton').style.display = "none";
+      document.body.style.backgroundImage = dockBackground;
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    function hideSelfie() {
+      document.getElementById('selfieContainer').style.display = "none";
+      document.getElementById('selfieText').style.display = "none";
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    function hideSwimWarning() {
+      document.getElementById('swimWarningImage').style.display = "none";
+      document.getElementById('swimWarningText').style.display = "none";
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    function hideHappySign() {
+      document.getElementById('happySign').style.display = "none";
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    function hideSickImage() {
+      document.getElementById('sickImage').style.display = "none";
+      document.body.classList.remove('blur-background');
+      document.getElementById('optionsSign').style.display = "block";
+    }
+  
+    async function chooseAction(action) {
+      document.getElementById('optionsSign').style.display = "none";
+      console.log('Action chosen:', action);
+      console.log('Current character:', selectedCharacter);
+      console.log('Current lagoon status:', lagoonStatus);
+  
+      if (action === "Pescar") {
+        const pescaImg = selectedCharacter === 'gatito' ? 'gatito_pescando.png' : 'perrito_pescando.png';
+        const doubtImg = selectedCharacter === 'gatito' ? 'gatitoduda.png' : 'perritoduda.png';
+        console.log('Setting fishing image:', pescaImg);
+        
+        try {
+          // First reset the background
+          document.body.style.backgroundImage = 'none';
+          document.body.style.backgroundColor = 'black';
+          
+          // Load fishing image
+          const fishingImage = new Image();
+          await new Promise((resolve, reject) => {
+            fishingImage.onload = resolve;
+            fishingImage.onerror = reject;
+            fishingImage.src = pescaImg;
+          });
+          
+          console.log('Fishing image loaded successfully');
+          document.body.style.backgroundImage = `url('${pescaImg}')`;
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundPosition = 'center center';
+          document.body.style.backgroundRepeat = 'no-repeat';
+          document.body.style.backgroundColor = 'transparent';
+          
+          // Load and show doubt image
+          const doubtImage = new Image();
+          doubtImage.onload = function() {
+            console.log('Doubt image loaded successfully');
+            document.getElementById('doubtImage').src = doubtImg;
+            document.getElementById('doubtImage').style.display = "block";
+            document.getElementById('doubtImage').style.zIndex = "15";
+          };
+          doubtImage.onerror = function() {
+            console.error('Failed to load doubt image:', doubtImg);
+          };
+          doubtImage.src = doubtImg;
+          
+          // Show decision sign after a short delay
+          setTimeout(() => {
+            document.getElementById('decisionSign').style.display = "block";
+            document.getElementById('decisionSign').style.zIndex = "20";
+          }, 500);
+          
+        } catch (error) {
+          console.error('Error loading fishing image:', error);
+          document.body.style.backgroundImage = dockBackground;
+        }
+      }
+  
+      if (action === "Tomar agua") {
+        if (lagoonStatus === "cianored.png") {
+          const ghostImg = selectedCharacter === 'gatito' ? 'gatitovet.png' : 'perritovet.png';
+          try {
+            document.body.style.backgroundImage = 'none';
+            document.body.style.backgroundColor = 'black';
+            const img = new Image();
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = ghostImg;
+            });
+            document.body.style.backgroundImage = `url('${ghostImg}')`;
+            document.body.style.backgroundColor = 'transparent';
+          } catch (error) {
+            console.error('Error loading ghost image:', error);
+            document.body.style.backgroundImage = dockBackground;
+          }
+          document.getElementById('warningMessage').style.display = "block";
+          document.getElementById('warningMessage').style.zIndex = "20";
+          document.getElementById('warningMessage').onclick = resetGame;
+        } else {
+          const sickImg = selectedCharacter === 'gatito' ? 'gatitoenfermo.png' : 'perritoenfermo.png';
+          try {
+            document.body.classList.add('blur-background');
+            
+            const sickImage = new Image();
+            sickImage.onload = function() {
+              console.log('Sick image loaded successfully');
+              document.getElementById('sickImage').src = sickImg;
+              document.getElementById('sickImage').style.display = "block";
+              document.getElementById('sickImage').style.zIndex = "15";
+            };
+            sickImage.onerror = function() {
+              console.error('Failed to load sick image:', sickImg);
+              document.body.classList.remove('blur-background');
+            };
+            sickImage.src = sickImg;
+            
+            document.getElementById('happyText').innerText = "AUNQUE EL CIANOSEMAFORO NO SEA ROJO, NO ES RECOMENDABLE TOMAR AGUA NO POTABLE YA QUE VIVEN OTROS MICROORGANISMOS Y COMPUESTOS QUE NOS PUEDEN ENFERMAR.";
+            document.getElementById('happySign').style.backgroundColor = "rgba(255, 0, 0, 0.9)";
+            document.getElementById('happySign').style.display = "block";
+            document.getElementById('happySign').style.zIndex = "20";
+            document.getElementById('happySign').onclick = resetGame;
+          } catch (error) {
+            console.error('Error loading sick image:', error);
+            document.body.classList.remove('blur-background');
+          }
+        }
+      }
+  
+      if (action === "Nadar") {
+        if (lagoonStatus === "cianored.png") {
+          const swimImg = selectedCharacter === 'gatito' ? 'gatitoverde.png' : 'perritoverde.png';
+          try {
+            const validSwimSrc = await loadImage(swimImg, 'fallback.png');
+            document.getElementById('swimWarningImage').src = validSwimSrc;
+            document.getElementById('swimWarningImage').style.display = "block";
+            document.getElementById('swimWarningText').style.display = "block";
+            document.getElementById('swimWarningImage').onclick = resetGame;
+            document.getElementById('swimWarningText').onclick = resetGame;
+          } catch (error) {
+            console.error('Error loading swim warning image:', error);
+          }
+        } else if (lagoonStatus === "cianogreen.png") {
+          const swimGoodImg = selectedCharacter === 'gatito' ? 'gatitonadando.png' : 'perritonadando.png';
+          try {
+            document.body.style.backgroundImage = 'none';
+            document.body.style.backgroundColor = 'black';
+            const img = new Image();
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = swimGoodImg;
+            });
+            document.body.style.backgroundImage = `url('${swimGoodImg}')`;
+            document.body.style.backgroundColor = 'transparent';
+            document.getElementById('happyText').innerText = "¡Nadar es relajante y divertido!";
+            document.getElementById('happySign').style.backgroundColor = "rgba(0, 128, 0, 0.85)";
+            document.getElementById('happySign').style.display = "block";
+            document.getElementById('happySign').onclick = resetGame;
+          } catch (error) {
+            console.error('Error loading swim good image:', error);
+            document.body.style.backgroundImage = dockBackground;
+          }
+        } else if (lagoonStatus === "cianoyellow.png") {
+          const swimCautionImg = selectedCharacter === 'gatito' ? 'gatitobanio.png' : 'perritobanio.png';
+          try {
+            const validCautionSrc = await loadImage(swimCautionImg, 'fallback.png');
+            document.body.style.backgroundImage = 'none';
+            document.body.style.backgroundColor = 'black';
+            const img = new Image();
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = validCautionSrc;
+            });
+            document.body.style.backgroundImage = `url('${validCautionSrc}')`;
+            document.body.style.backgroundColor = 'transparent';
+            document.getElementById('happyText').innerText = "Nadar es divertido, pero hay que bañarse muy bien luego para evitar problemas.";
+            document.getElementById('happySign').style.backgroundColor = "rgba(255, 165, 0, 0.85)";
+            document.getElementById('happySign').style.display = "block";
+            document.getElementById('happySign').onclick = resetGame;
+          } catch (error) {
+            console.error('Error loading swim caution image:', error);
+            document.body.style.backgroundImage = dockBackground;
+          }
+        }
+      }
+  
+      if (action === "Sacarse una selfie") {
+        const selfieImg = selectedCharacter === 'gatito' ? 'selfie_gatito.png' : 'selfie_perrito.png';
+        try {
+          const validSelfieSrc = await loadImage(selfieImg, 'fallback.png');
+          const selfieContainer = document.getElementById('selfieContainer');
+          selfieContainer.style.backgroundImage = `url('${validSelfieSrc}')`;
+          selfieContainer.style.display = "block";
+          
+          // Show text only for selfie action
+          const selfieText = document.getElementById('selfieText');
+          selfieText.style.display = "block";
+          selfieText.innerHTML = "Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet 📸 😊 🤳";
+          
+          // Show SELFIE TIME button
+          document.getElementById('selfieTimeButton').style.display = "block";
+          
+          selfieContainer.onclick = resetGame;
+          selfieText.onclick = resetGame;
+        } catch (error) {
+          console.error('Error loading selfie image:', error);
+        }
+      }
+    }
+  
+    function showDecision() {
+      console.log('Showing decision sign');
+      const doubtImg = selectedCharacter === 'gatito' ? 'gatitoduda.png' : 'perritoduda.png';
+      console.log('Setting doubt image:', doubtImg);
+      
+      // Load and show the doubt image
+      const img = new Image();
+      img.onload = function() {
+        console.log('Doubt image loaded successfully');
+        document.getElementById('doubtImage').src = doubtImg;
+        document.getElementById('doubtImage').style.display = "block";
+        document.getElementById('doubtImage').style.zIndex = "15"; // Ensure it's above background but below decision sign
+      };
+      img.onerror = function() {
+        console.error('Failed to load doubt image:', doubtImg);
+      };
+      img.src = doubtImg;
+      
+      document.getElementById('decisionSign').style.display = "block";
+      document.getElementById('decisionSign').style.zIndex = "20"; // Ensure it's above other elements
+      document.body.onclick = null; // remove handler after first click
+    }
+  
+    function hideDecision() {
+      console.log('Hiding decision sign');
+      document.getElementById('decisionSign').style.display = "none";
+      document.getElementById('doubtImage').style.display = "none";
+      
+      if (lagoonStatus === "cianored.png" || lagoonStatus === "cianoyellow.png") {
+        const sandwichImg = selectedCharacter === 'gatito' ? 'gatitosandwich.png' : 'perritosandwich.png';
+        
+        // Show sandwich container
+        const sandwichContainer = document.getElementById('sandwichContainer');
+        const sandwichContent = document.getElementById('sandwichContent');
+        
+        // Set the background image
+        sandwichContent.style.backgroundImage = `url('${sandwichImg}')`;
+        
+        // Show the sandwich view
+        sandwichContainer.style.display = "block";
+        
+        // Play applause sound
+        const applauseSound = document.getElementById('applauseSound');
+        applauseSound.play().catch(() => console.log("Sound playback failed"));
+        
+        // Add click handler to return to main menu
+        sandwichContainer.onclick = function() {
+          sandwichContainer.style.display = "none";
+          resetGame();
+        };
+      } else if (lagoonStatus === "cianogreen.png") {
+        const hungryImg = selectedCharacter === 'gatito' ? 'gatitohambre.png' : 'perritohambre.png';
+        console.log('Setting hungry image:', hungryImg);
+        
+        // Load and show hungry image
+        const hungryImage = new Image();
+        hungryImage.onload = function() {
+          console.log('Hungry image loaded successfully');
+          document.body.style.backgroundImage = `url('${hungryImg}')`;
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundPosition = 'center center';
+          document.body.style.backgroundRepeat = 'no-repeat';
+          document.body.style.backgroundColor = 'transparent';
+          
+          // Show sad message
+          document.getElementById('happyText').innerText = "😢 Hubiera sido bueno comerlo...";
+          document.getElementById('happySign').style.backgroundColor = "rgba(255, 0, 0, 0.85)";
+          document.getElementById('happySign').style.display = "block";
+          document.getElementById('happySign').style.zIndex = "20";
+          document.getElementById('happySign').onclick = resetGame;
+        };
+        hungryImage.onerror = function() {
+          console.error('Failed to load hungry image:', hungryImg);
+          document.body.style.backgroundImage = dockBackground;
+        };
+        hungryImage.src = hungryImg;
+      }
+    }
+  
+    function eatFish() {
+      console.log('Eating fish');
+      document.getElementById('decisionSign').style.display = "none";
+      document.getElementById('doubtImage').style.display = "none";
+      
+      if (lagoonStatus === "cianored.png") {
+        const ghostImg = selectedCharacter === 'gatito' ? 'gatitovet.png' : 'perritovet.png';
+        
+        // Hide all other elements first
+        document.getElementById('statusResultImage').style.display = "none";
+        document.getElementById('continueButton').style.display = "none";
+        document.getElementById('microImage').style.display = "none";
+        document.getElementById('microImage100x').style.display = "none";
+        document.getElementById('microExplanation').style.display = "none";
+        document.getElementById('microSpecies').style.display = "none";
+        document.getElementById('optionsSign').style.display = "none";
+        
+        // Show warning container
+        const warningContainer = document.getElementById('warningContainer');
+        const warningContent = document.getElementById('warningContent');
+        
+        // Set the background image
+        warningContent.style.backgroundImage = `url('${ghostImg}')`;
+        
+        // Show the warning
+        warningContainer.style.display = "block";
+        
+        // Play alert sound
+        const alertSound = document.getElementById('alertSound');
+        alertSound.play().catch(() => console.log("Sound playback failed"));
+        
+        // Add click handler to return to main menu
+        warningContainer.onclick = function() {
+          warningContainer.style.display = "none";
+          resetGame();
+        };
+      } else {
+        const eatingImg = selectedCharacter === 'gatito' ? 'gatitocomiendo.png' : 'perritocomiendo.png';
+        console.log('Setting eating image:', eatingImg);
+        
+        // Load and show eating image
+        const eatingImage = new Image();
+        eatingImage.onload = function() {
+          console.log('Eating image loaded successfully');
+          document.body.style.backgroundImage = `url('${eatingImg}')`;
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundPosition = 'center center';
+          document.body.style.backgroundRepeat = 'no-repeat';
+          document.body.style.backgroundColor = 'transparent';
+        };
+        eatingImage.onerror = function() {
+          console.error('Failed to load eating image:', eatingImg);
+          document.body.style.backgroundImage = dockBackground;
+        };
+        eatingImage.src = eatingImg;
+        
+        document.getElementById('happyText').innerText = "¡Qué rico pescado! Todo está bien.";
+        document.getElementById('happySign').style.backgroundColor = "rgba(0, 128, 0, 0.85)";
+        document.getElementById('happySign').style.display = "block";
+        document.getElementById('happySign').style.zIndex = "20";
+
+        // Add click handler to return to main menu after showing happy message
+        document.getElementById('happySign').onclick = function() {
+          resetGame();
+        };
+      }
+    }
+  
+    function resetGame() {
+      location.reload();
+    }
+
+    function switchMicroView() {
+      const micro10x = document.getElementById('microImage');
+      const micro100x = document.getElementById('microImage100x');
+      const plant100x = document.getElementById('plantImage100x');
+      const microExplanation = document.getElementById('microExplanation');
+      const microSpecies = document.getElementById('microSpecies');
+      const labView = document.getElementById('labView');
+      
+      if (micro10x.style.display !== "none") {
+        // Add spinning animation
+        micro10x.classList.add('spinning');
+        
+        // Wait for animation to complete before switching views
+        setTimeout(() => {
+          // Store current background for returning later
+          window.previousBackground = document.body.style.backgroundImage;
+          
+          // Switch to lab view
+          document.body.style.backgroundImage = "url('lab.png')";
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundPosition = 'center center';
+          
+          // Hide all other elements
+          micro10x.style.display = "none";
+          micro10x.classList.remove('spinning');
+          micro100x.style.display = "none";
+          plant100x.style.display = "none";
+          microExplanation.style.display = "none";
+          microSpecies.style.display = "none";
+          document.getElementById('statusResultImage').style.display = "none";
+          document.getElementById('continueButton').style.display = "none";
+          
+          // Show lab view
+          labView.style.display = "block";
+          
+          if (lagoonStatus === "cianoyellow.png") {
+            // For yellow status, show yellow microscope images
+            document.querySelectorAll('.microscope-container')[0].style.display = "flex";
+            document.querySelectorAll('.microscope-container')[1].style.display = "none";
+            
+            // Update the images and text
+            document.getElementById('labMicro10x').src = window.yellowMicro10x;
+            document.getElementById('labMicro100x').src = window.yellowMicro100x;
+            document.querySelectorAll('.micro-explanation-text')[0].innerHTML = 
+              "Cuando el cianosemaforo es amarillo, en una gota de laguna bajo el microscopio podemos ver una gran diversidad pero las colonias de <i>Microcystis</i> sp ya empiecen a superar en número al resto";
+            document.getElementById('labMicroSpecies').innerHTML = 
+              "<i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas";
+          } else if (lagoonStatus === "cianogreen.png") {
+            // For green status, show only the verde10x image with text
+            const labView = document.getElementById('labView');
+            
+            // Clear the lab view content
+            labView.innerHTML = '';
+            
+            // Create and add the image
+            const image = document.createElement('img');
+            image.src = window.greenMicro10x;
+            image.style.width = '60vw';
+            image.style.maxWidth = '600px';
+            image.style.minWidth = '300px';
+            image.style.marginTop = '50px';
+            image.style.border = '8px solid #2c3e50';
+            image.style.borderRadius = '20px';
+            image.style.boxShadow = '0 0 20px rgba(44, 62, 80, 0.3)';
+            labView.appendChild(image);
+            
+            // Create and add the explanation text
+            const explanationText = document.createElement('div');
+            explanationText.innerHTML = 
+              "Cuando el cianosemaforo es verde, en una sola gota de agua bajo el microscopio podemos apreciar la inmensa biodiversidad que esconden nuestras lagunas 💧 🌱";
+            explanationText.style.position = "absolute";
+            explanationText.style.left = "50%";
+            explanationText.style.top = "60%";
+            explanationText.style.transform = "translateX(-50%)";
+            explanationText.style.width = "80%";
+            explanationText.style.maxWidth = "800px";
+            explanationText.style.textAlign = "center";
+            explanationText.style.zIndex = "20";
+            explanationText.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+            explanationText.style.color = "white";
+            explanationText.style.padding = "15px";
+            explanationText.style.borderRadius = "15px";
+            explanationText.style.fontSize = "16px";
+            explanationText.style.lineHeight = "1.6";
+            labView.appendChild(explanationText);
+            
+            // Add the return button
+            const returnButton = document.createElement('button');
+            returnButton.className = 'return-button';
+            returnButton.onclick = returnToLagoon;
+            returnButton.textContent = 'Volvamos a la laguna 🌊 😄';
+            labView.appendChild(returnButton);
+          } else if (lagoonStatus === "cianored.png") {
+            // Randomly choose between micro and plant views for red status
+            const showPlant = Math.random() < 0.5;
+            document.querySelectorAll('.microscope-container')[0].style.display = showPlant ? "none" : "flex";
+            document.querySelectorAll('.microscope-container')[1].style.display = showPlant ? "flex" : "none";
+          }
+        }, 1500); // Match this with the animation duration
+      }
+    }
+
+    function returnToLagoon() {
+      // Hide lab view
+      document.getElementById('labView').style.display = "none";
+      
+      // Restore previous background
+      document.body.style.backgroundImage = window.previousBackground;
+      
+      // Show options
+      document.getElementById('optionsSign').style.display = "block";
+    }
+
+    // Add new function for selfie time
+    document.getElementById('selfieTimeButton').onclick = function() {
+      const selfieTimeBg = document.getElementById('selfieTimeBackground');
+      selfieTimeBg.style.backgroundImage = "url('selfietime.png')";
+      selfieTimeBg.style.display = "block";
+      
+      // Hide other elements
+      document.getElementById('selfieContainer').style.display = "none";
+      document.getElementById('selfieText').style.display = "none";
+      document.getElementById('selfieTimeButton').style.display = "none";
+      
+      // Add click handler to return to main menu
+      selfieTimeBg.onclick = resetGame;
+    };
+  </script>
+  
+</body>
+</html>
