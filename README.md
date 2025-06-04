@@ -32,14 +32,6 @@ Este juego interactivo permite a los jugadores explorar una laguna virtual y apr
 - CSS3
 - JavaScript
 
-## Contribuir
-
-Si deseas contribuir al proyecto:
-1. Haz un Fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
 
 ## Licencia
 
@@ -47,4 +39,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## Contacto
 
-Para más información sobre el proyecto, por favor contacta a [tu email o contacto]. 
+Para más información sobre el proyecto, por favor contacta a mari.mesquida@gmail.com. 

@@ -55,6 +55,20 @@
       margin-top: 15px;
       color: white;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(45deg, #2c3e50, #3498db);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 5px 15px;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .character:hover p {
+      transform: scale(1.1);
     }
     #gameTitle {
       font-size: 36px;
@@ -282,13 +296,13 @@
     .status-result-image {
       display: none;
       position: absolute;
-      top: 5%;
+      top: 4%;
       left: 50%;
       transform: translateX(-50%);
       width: 70vw;
       max-width: 700px;
       min-width: 400px;
-      z-index: 15;
+      z-index: 25;
       border: 12px solid #2c3e50;
       border-radius: 25px;
       box-shadow: 0 0 30px rgba(44, 62, 80, 0.4),
@@ -299,7 +313,7 @@
     .micro-image {
       display: none;
       position: absolute;
-      bottom: 10%;
+      bottom: 5%;
       left: 50%;
       transform: translateX(-50%);
       width: 35vw;
@@ -807,6 +821,7 @@
       background-position: center;
       background-repeat: no-repeat;
       z-index: 10;
+      pointer-events: none; /* Disable clicks on the container */
     }
 
     .selfie-text {
@@ -821,7 +836,6 @@
       font-size: 24px;
       color: white;
       z-index: 15;
-      cursor: pointer;
       text-align: center;
       width: 90%;
       max-width: 800px;
@@ -831,19 +845,20 @@
       margin: 0 auto;
       left: 0;
       right: 0;
+      pointer-events: none; /* Disable clicks on the text */
     }
 
     .selfie-time-button {
       display: none;
       position: fixed;
       top: 50%;
-      right: 5%;
-      transform: translateY(-50%);
-      padding: 20px 40px;
-      font-size: 28px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      font-size: 24px;
       border: none;
       border-radius: 15px;
-      background-color: #2c3e50;
+      background-color: rgba(44, 62, 80, 0.8);
       color: white;
       cursor: pointer;
       font-family: 'Arial', sans-serif;
@@ -855,8 +870,8 @@
     }
 
     .selfie-time-button:hover {
-      background-color: #34495e;
-      transform: translateY(-50%) scale(1.05);
+      background-color: rgba(52, 73, 94, 0.9);
+      transform: translate(-50%, -50%) scale(1.05);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
 
@@ -1024,20 +1039,111 @@
     .main-content {
       display: block;
     }
+
+    .author-section {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 16px;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px 0;
+    }
+
+    .author-section a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      margin: 0 10px;
+    }
+
+    .author-section a:hover {
+      color: #2c3e50;
+    }
+
+    .copyright {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .info-button {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: rgba(44, 62, 80, 0.8);
+      color: white;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .info-button:hover {
+      background-color: rgba(52, 73, 94, 0.9);
+      transform: scale(1.05);
+    }
+
+    .info-page {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('pagina.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 2000;
+    }
+
+    .qr-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw;
+      max-width: 800px;
+      height: 80vh;
+      max-height: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .qr-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
   <h1 id="gameTitle">¡Bienvenido a la Aventura en la Laguna!</h1>
   <h2 id="characterSelection">Elige tu personaje</h2>
   <div class="character-selection">
-    <div class="character" onclick="playSound('gatitoSound');startGame('gatito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('gatito')" role="button" aria-label="Seleccionar Gatito">
-      <img src="gatito.png" alt="Gatito" />
-      <p>Gatito</p>
+    <div class="character" onclick="playSound('gatitoSound');startGame('gatito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('gatito')" role="button" aria-label="Seleccionar Flora">
+      <img src="gatito.png" alt="Flora" />
+      <p>Flora</p>
     </div>
-    <div class="character" onclick="playSound('perritoSound');startGame('perrito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('perrito')" role="button" aria-label="Seleccionar Perrito">
-      <img src="perrito.png" alt="Perrito" />
-      <p>Perrito</p>
+    <div class="character" onclick="playSound('perritoSound');startGame('perrito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('perrito')" role="button" aria-label="Seleccionar Ferro">
+      <img src="perrito.png" alt="Ferro" />
+      <p>Ferro</p>
     </div>
+  </div>
+
+  <div class="author-section">
+    <a href="https://inbiotec-conicet.gob.ar/personal/marianela-mesquida/" target="_blank">Lic. Marianela Mesquida,</a>Lic. Sofia Regalini &<a href="https://inbiotec-conicet.gob.ar/personal/victoria-martin/" target="_blank">Dra. M Victoria Martin</a> - <a href="https://inbiotec-conicet.gob.ar/" target="_blank">INBIOTEC - CONICET</a> - <a href="https://www.fiba.org.ar/" target="_blank">Fundación FIBA</a> © 2025
   </div>
 
   <button class="status-button" id="statusButton" onclick="showRandomLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') showRandomLagoonStatus()" role="button" aria-label="Ver estado de la laguna">🌊 ESTADO DE LA LAGUNA</button>
@@ -1045,7 +1151,7 @@
   <button class="continue-button" id="continueButton" onclick="showOptions()" tabindex="0" onkeydown="if(event.key === 'Enter') showOptions()" role="button" aria-label="Continuar">CONTINUAR</button>
   <button class="back-button" id="backButton" onclick="resetGame()" tabindex="0" onkeydown="if(event.key === 'Enter') resetGame()" role="button" aria-label="Volver al menú">🔙 Volver al menú</button>
 
-  <img id="lagoonImage" class="status-image" src="" alt="Estado de la Laguna" onclick="hideLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') hideLagoonStatus()" role="button" aria-label="Ocultar estado de la laguna" />
+  <img id="lagoonImage" class="status-image" src="" alt="Estado de la Laguna" />
   <img id="statusResultImage" class="status-result-image" src="" alt="Resultado del estado de la Laguna" />
   <img id="microImage" class="micro-image" src="" alt="Imagen microscópica" onclick="switchMicroView()" />
   <img id="microImage100x" class="micro-image" src="" alt="Imagen microscópica 100x" style="display: none;" onclick="switchMicroView()" />
@@ -1170,11 +1276,20 @@
   <audio id="applauseSound" src="aplauso.wav"></audio>
 
   <div id="selfieText" class="selfie-text">
-    Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet 📸 😊 🤳
+    Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet y @fundacionfiba 📸 😊 🤳
   </div>
 
-  <button id="selfieTimeButton" class="selfie-time-button">SELFIE TIME</button>
+  <button id="selfieTimeButton" class="selfie-time-button">📸 ¡Selfie Time! 📸</button>
   <div id="selfieTimeBackground" class="selfie-time-background"></div>
+
+  <button id="infoButton" class="info-button">ℹ️ Más información 📱</button>
+
+  <div id="infoPage" class="info-page">
+    <div class="qr-container">
+      <img src="qr.png" alt="QR Code" />
+    </div>
+    <button class="back-button" onclick="returnToMainMenu()" style="display: block;">🔙 Volver al menú</button>
+  </div>
 
   <script>
     let selectedCharacter = "";
@@ -1212,6 +1327,8 @@
       document.querySelector('.character-selection').style.display = "none";
       document.getElementById('gameTitle').style.display = "none";
       document.getElementById('statusButton').style.display = "block";
+      document.querySelector('.author-section').style.display = "none"; // Hide author section
+      document.getElementById('infoButton').style.display = "none"; // Hide info button
       
       // Change background based on character selection
       if (character === 'gatito') {
@@ -1261,12 +1378,15 @@
         window.yellowMicro100x = "amarillo100x.png";
         document.getElementById('microExplanation').innerHTML = "Cuando el cianosemaforo es amarillo, en una gota de laguna bajo el microscopio podemos ver una gran diversidad pero las colonias de <i>Microcystis</i> sp ya empiecen a superar en número al resto";
       } else if (lagoonStatus === "cianogreen.png") {
-        resultImage = "green.gif";
+        resultImage = "green.png";
         backgroundImage = "bluelake.png";
         // Store the green status images for later use
         window.greenMicro10x = "verde10x.png";
         window.greenMicro100x = "verde100x.png";
       }
+      
+      console.log('Setting result image:', resultImage);
+      console.log('Setting background image:', backgroundImage);
       
       document.body.style.backgroundImage = `url('${backgroundImage}')`;
       document.getElementById('statusResultImage').src = resultImage;
@@ -1536,7 +1656,7 @@
           // Show text only for selfie action
           const selfieText = document.getElementById('selfieText');
           selfieText.style.display = "block";
-          selfieText.innerHTML = "Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet 📸 😊 🤳";
+          selfieText.innerHTML = "Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet y @fundacionfiba 📸 😊 🤳";
           
           // Show SELFIE TIME button
           document.getElementById('selfieTimeButton').style.display = "block";
@@ -1684,7 +1804,7 @@
         };
         eatingImage.src = eatingImg;
         
-        document.getElementById('happyText').innerText = "¡Qué rico pescado! Todo está bien.";
+        document.getElementById('happyText').innerText = "¡Qué rico pescado! Panza llena, corazón contento!!.";
         document.getElementById('happySign').style.backgroundColor = "rgba(0, 128, 0, 0.85)";
         document.getElementById('happySign').style.display = "block";
         document.getElementById('happySign').style.zIndex = "20";
@@ -1827,6 +1947,23 @@
       // Add click handler to return to main menu
       selfieTimeBg.onclick = resetGame;
     };
+
+    // Add new function for info page
+    document.getElementById('infoButton').onclick = function() {
+      document.getElementById('infoPage').style.display = "block";
+      document.getElementById('gameTitle').style.display = "none";
+      document.getElementById('characterSelection').style.display = "none";
+      document.querySelector('.character-selection').style.display = "none";
+      document.getElementById('infoButton').style.display = "none";
+    };
+
+    function returnToMainMenu() {
+      document.getElementById('infoPage').style.display = "none";
+      document.getElementById('gameTitle').style.display = "block";
+      document.getElementById('characterSelection').style.display = "block";
+      document.querySelector('.character-selection').style.display = "flex";
+      document.getElementById('infoButton').style.display = "block";
+    }
   </script>
   
 </body>
