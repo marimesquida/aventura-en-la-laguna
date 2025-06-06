@@ -1129,27 +1129,27 @@
   </style>
 </head>
 <body>
-  <h1 id="gameTitle">¡Bienvenido a la Aventura en la Laguna!</h1>
-  <h2 id="characterSelection">Elige tu personaje</h2>
+  <h1 id="gameTitle">¡BIENVENIDO A LA AVENTURA EN LA LAGUNA!</h1>
+  <h2 id="characterSelection">ELIGE TU PERSONAJE</h2>
   <div class="character-selection">
     <div class="character" onclick="playSound('gatitoSound');startGame('gatito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('gatito')" role="button" aria-label="Seleccionar Flora">
       <img src="gatito.png" alt="Flora" />
-      <p>Flora</p>
+      <p>FLORA</p>
     </div>
     <div class="character" onclick="playSound('perritoSound');startGame('perrito')" tabindex="0" onkeydown="if(event.key === 'Enter') startGame('perrito')" role="button" aria-label="Seleccionar Ferro">
       <img src="perrito.png" alt="Ferro" />
-      <p>Ferro</p>
+      <p>FERRO</p>
     </div>
   </div>
 
   <div class="author-section">
-    <a href="https://inbiotec-conicet.gob.ar/personal/marianela-mesquida/" target="_blank">Lic. Marianela Mesquida,</a>Lic. Sofia Regalini &<a href="https://inbiotec-conicet.gob.ar/personal/victoria-martin/" target="_blank">Dra. M Victoria Martin</a> - <a href="https://inbiotec-conicet.gob.ar/" target="_blank">INBIOTEC - CONICET</a> - <a href="https://www.fiba.org.ar/" target="_blank">Fundación FIBA</a> © 2025
+    <a href="https://inbiotec-conicet.gob.ar/personal/marianela-mesquida/" target="_blank">LIC. MARIANELA MESQUIDA,</a>LIC. SOFIA REGALINI &<a href="https://inbiotec-conicet.gob.ar/personal/victoria-martin/" target="_blank">DRA. M VICTORIA MARTIN</a> - <a href="https://inbiotec-conicet.gob.ar/" target="_blank">INBIOTEC - CONICET</a> - <a href="https://www.fiba.org.ar/" target="_blank">FUNDACIÓN FIBA</a> © 2025
   </div>
 
   <button class="status-button" id="statusButton" onclick="showRandomLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') showRandomLagoonStatus()" role="button" aria-label="Ver estado de la laguna">🌊 ESTADO DE LA LAGUNA</button>
   <button class="investigate-button" id="investigateButton" onclick="showLagoonStatus()" tabindex="0" onkeydown="if(event.key === 'Enter') showLagoonStatus()" role="button" aria-label="Investigar estado de la laguna">🔬 INVESTIGUEMOS!</button>
   <button class="continue-button" id="continueButton" onclick="showOptions()" tabindex="0" onkeydown="if(event.key === 'Enter') showOptions()" role="button" aria-label="Continuar">CONTINUAR</button>
-  <button class="back-button" id="backButton" onclick="resetGame()" tabindex="0" onkeydown="if(event.key === 'Enter') resetGame()" role="button" aria-label="Volver al menú">🔙 Volver al menú</button>
+  <button class="back-button" id="backButton" onclick="resetGame()" tabindex="0" onkeydown="if(event.key === 'Enter') resetGame()" role="button" aria-label="Volver al menú">🔙 VOLVER AL MENÚ</button>
 
   <img id="lagoonImage" class="status-image" src="" alt="Estado de la Laguna" />
   <img id="statusResultImage" class="status-result-image" src="" alt="Resultado del estado de la Laguna" />
@@ -1158,11 +1158,11 @@
   <img id="plantImage100x" class="micro-image" src="" alt="Imagen microscópica planta 100x" style="display: none;" onclick="switchMicroView()" />
 
   <div class="options" id="optionsSign">
-    <p>¿Qué quieres hacer?</p>
-    <button onclick="chooseAction('Pescar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Pescar')" role="button" aria-label="Pescar">🎣 Pescar</button>
-    <button onclick="chooseAction('Nadar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Nadar')" role="button" aria-label="Nadar">🏊 Nadar</button>
-    <button onclick="chooseAction('Tomar agua')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Tomar agua')" role="button" aria-label="Tomar agua">💧 Tomar agua</button>
-    <button onclick="chooseAction('Sacarse una selfie')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Sacarse una selfie')" role="button" aria-label="Sacarse una selfie">📸 Sacarse una selfie</button>
+    <p>¿QUÉ QUIERES HACER?</p>
+    <button onclick="chooseAction('Pescar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Pescar')" role="button" aria-label="Pescar">🎣 PESCAR</button>
+    <button onclick="chooseAction('Nadar')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Nadar')" role="button" aria-label="Nadar">🏊 NADAR</button>
+    <button onclick="chooseAction('Tomar agua')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Tomar agua')" role="button" aria-label="Tomar agua">💧 TOMAR AGUA</button>
+    <button onclick="chooseAction('Sacarse una selfie')" tabindex="0" onkeydown="if(event.key === 'Enter') chooseAction('Sacarse una selfie')" role="button" aria-label="Sacarse una selfie">📸 SACARSE UNA SELFIE</button>
   </div>
 
   <img id="doubtImage" class="doubt-image" src="" alt="Duda del personaje" />
@@ -1171,9 +1171,9 @@
   <img id="sickImage" class="sick-image" src="" alt="Personaje enfermo" onclick="hideSickImage()" tabindex="0" onkeydown="if(event.key === 'Enter') hideSickImage()" role="button" aria-label="Ocultar imagen de enfermedad" />
 
   <div id="decisionSign" class="decision-sign">
-    <p>¿Lo como o no lo como?</p>
-    <button onclick="eatFish()" tabindex="0" onkeydown="if(event.key === 'Enter') eatFish()" role="button" aria-label="Comer el pescado">Lo como</button>
-    <button onclick="hideDecision()" tabindex="0" onkeydown="if(event.key === 'Enter') hideDecision()" role="button" aria-label="No comer el pescado">No lo como</button>
+    <p>¿LO COMO O NO LO COMO?</p>
+    <button onclick="eatFish()" tabindex="0" onkeydown="if(event.key === 'Enter') eatFish()" role="button" aria-label="Comer el pescado">LO COMO</button>
+    <button onclick="hideDecision()" tabindex="0" onkeydown="if(event.key === 'Enter') hideDecision()" role="button" aria-label="No comer el pescado">NO LO COMO</button>
   </div>
 
   <div id="swimWarningText" class="swim-warning-text" onclick="hideSwimWarning()" tabindex="0" onkeydown="if(event.key === 'Enter') hideSwimWarning()" role="button" aria-label="Ocultar advertencia de nado">
@@ -1189,10 +1189,10 @@
   </div>
 
   <div id="microExplanation" class="micro-explanation">
-    Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+    CUANDO HAY UNA FLORACIÓN Y VEMOS UNA GOTA DE AGUA EN EL MICROSCOPIO, VEREMOS QUE LA CIANOBACTERIA DOMINA EN NÚMERO.
   </div>
   <div id="microSpecies" class="micro-species">
-    <i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas
+    <i>MICROCYSTIS AERUGINOSA</i>, CIANOBACTERIA PRODUCTORA DE TOXINAS
   </div>
 
   <!-- New elements for lab view -->
@@ -1204,7 +1204,7 @@
           <img id="labMicro10x" src="micro10x.png" alt="Microscopio 10x" />
         </div>
         <div class="micro-explanation-text">
-          Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+          CUANDO HAY UNA FLORACIÓN Y VEMOS UNA GOTA DE AGUA EN EL MICROSCOPIO, VEREMOS QUE LA CIANOBACTERIA DOMINA EN NÚMERO.
         </div>
       </div>
       <div class="microscope-view">
@@ -1213,7 +1213,7 @@
           <img id="labMicro100x" src="micro100x.png" alt="Microscopio 100x" />
         </div>
         <div class="micro-explanation-text" id="labMicroSpecies">
-          <i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas
+          <i>MICROCYSTIS AERUGINOSA</i>, CIANOBACTERIA PRODUCTORA DE TOXINAS
         </div>
       </div>
     </div>
@@ -1224,7 +1224,7 @@
           <img id="labPlant10x" src="plant10x.png" alt="Planta 10x" />
         </div>
         <div class="micro-explanation-text">
-          Cuando hay una floración y vemos una gota de agua en el microscopio, veremos que la cianobacteria domina en número.
+          CUANDO HAY UNA FLORACIÓN Y VEMOS UNA GOTA DE AGUA EN EL MICROSCOPIO, VEREMOS QUE LA CIANOBACTERIA DOMINA EN NÚMERO.
         </div>
       </div>
       <div class="microscope-view">
@@ -1233,11 +1233,11 @@
           <img id="labPlant100x" src="plant100x.png" alt="Planta 100x" />
         </div>
         <div class="micro-explanation-text" id="labPlantSpecies">
-          <i>Planktothrix agardhii</i> es una cianobacteria productora de toxinas, cuya floracion se destaca en invierno ❄️
+          <i>PLANKTOTHRIX AGARDHII</i> ES UNA CIANOBACTERIA PRODUCTORA DE TOXINAS, CUYA FLORACION SE DESTACA EN INVIERNO ❄️
         </div>
       </div>
     </div>
-    <button id="returnToLagoon" class="return-button" onclick="returnToLagoon()">Volvamos a la laguna 🌊 😄</button>
+    <button id="returnToLagoon" class="return-button" onclick="returnToLagoon()">VOLVAMOS A LA LAGUNA 🌊 😄</button>
   </div>
 
   <!-- Audio elements for sound effects and background music -->
@@ -1255,7 +1255,7 @@
   <div id="warningContainer" class="warning-container">
     <div id="warningContent" class="warning-content">
       <div class="warning-text">
-        ⚠️ Es muy peligroso consumir recursos de una laguna con floración de cianobacterias ya que las toxinas nos pueden enfermar gravemente 🏥
+        ⚠️ ES MUY PELIGROSO CONSUMIR RECURSOS DE UNA LAGUNA CON FLORACIÓN DE CIANOBACTERIAS YA QUE LAS TOXINAS NOS PUEDEN ENFERMAR GRAVEMENTE 🏥
       </div>
     </div>
   </div>
@@ -1267,7 +1267,7 @@
   <div id="sandwichContainer" class="sandwich-container">
     <div id="sandwichContent" class="sandwich-content">
       <div class="sandwich-text">
-        🥪 Cuando vamos a la naturaleza, siempre bueno llevar comida desde casa para no arriesgarnos 😊
+        🥪 CUANDO VAMOS A LA NATURALEZA, SIEMPRE BUENO LLEVAR COMIDA DESDE CASA PARA NO ARRIESGARNOS 😊
       </div>
     </div>
   </div>
@@ -1276,13 +1276,13 @@
   <audio id="applauseSound" src="aplauso.wav"></audio>
 
   <div id="selfieText" class="selfie-text">
-    Siempre es lindo retratar un recuerdo, sacate una selfie con nosotros y etiquetanos @inbiotec.conicet y @fundacionfiba 📸 😊 🤳
+    SIEMPRE ES LINDO RETRATAR UN RECUERDO, SACATE UNA SELFIE CON NOSOTROS Y ETIQUETANOS @INBIOTEC.CONICET Y @FUNDACIONFIBA 📸 😊 🤳
   </div>
 
-  <button id="selfieTimeButton" class="selfie-time-button">📸 ¡Selfie Time! 📸</button>
+  <button id="selfieTimeButton" class="selfie-time-button">📸 ¡SELFIE TIME! 📸</button>
   <div id="selfieTimeBackground" class="selfie-time-background"></div>
 
-  <button id="infoButton" class="info-button">ℹ️ Más información 📱</button>
+  <button id="infoButton" class="info-button">ℹ️ MÁS INFORMACIÓN 📱</button>
 
   <div id="infoPage" class="info-page">
     <div class="qr-container">
@@ -1376,7 +1376,7 @@
         // Store the yellow status images for later use
         window.yellowMicro10x = "amarillo10x.png";
         window.yellowMicro100x = "amarillo100x.png";
-        document.getElementById('microExplanation').innerHTML = "Cuando el cianosemaforo es amarillo, en una gota de laguna bajo el microscopio podemos ver una gran diversidad pero las colonias de <i>Microcystis</i> sp ya empiecen a superar en número al resto";
+        document.getElementById('microExplanation').innerHTML = "CUANDO EL CIANOSEMAFORO ES AMARILLO, EN UNA GOTA DE LAGUNA BAJO EL MICROSCOPIO PODEMOS VER UNA GRAN DIVERSIDAD PERO LAS COLONIAS DE <i>MICROCYSTIS</i> SP YA EMPIECEN A SUPERAR EN NÚMERO AL RESTO";
       } else if (lagoonStatus === "cianogreen.png") {
         resultImage = "green.png";
         backgroundImage = "bluelake.png";
@@ -1804,7 +1804,7 @@
         };
         eatingImage.src = eatingImg;
         
-        document.getElementById('happyText').innerText = "¡Qué rico pescado! Panza llena, corazón contento!!.";
+        document.getElementById('happyText').innerText = "¡QUÉ RICO PESCADO! PANZA LLENA, CORAZÓN CONTENTO!!";
         document.getElementById('happySign').style.backgroundColor = "rgba(0, 128, 0, 0.85)";
         document.getElementById('happySign').style.display = "block";
         document.getElementById('happySign').style.zIndex = "20";
@@ -1864,9 +1864,9 @@
             document.getElementById('labMicro10x').src = window.yellowMicro10x;
             document.getElementById('labMicro100x').src = window.yellowMicro100x;
             document.querySelectorAll('.micro-explanation-text')[0].innerHTML = 
-              "Cuando el cianosemaforo es amarillo, en una gota de laguna bajo el microscopio podemos ver una gran diversidad pero las colonias de <i>Microcystis</i> sp ya empiecen a superar en número al resto";
+              "CUANDO EL CIANOSEMAFORO ES AMARILLO, EN UNA GOTA DE LAGUNA BAJO EL MICROSCOPIO PODEMOS VER UNA GRAN DIVERSIDAD PERO LAS COLONIAS DE <i>MICROCYSTIS</i> SP YA EMPIECEN A SUPERAR EN NÚMERO AL RESTO";
             document.getElementById('labMicroSpecies').innerHTML = 
-              "<i>Microcystis aeruginosa</i>, cianobacteria productora de toxinas";
+              "<i>MICROCYSTIS AERUGINOSA</i>, CIANOBACTERIA PRODUCTORA DE TOXINAS";
           } else if (lagoonStatus === "cianogreen.png") {
             // For green status, show only the verde10x image with text
             const labView = document.getElementById('labView');
@@ -1889,7 +1889,7 @@
             // Create and add the explanation text
             const explanationText = document.createElement('div');
             explanationText.innerHTML = 
-              "Cuando el cianosemaforo es verde, en una sola gota de agua bajo el microscopio podemos apreciar la inmensa biodiversidad que esconden nuestras lagunas 💧 🌱";
+              "CUANDO EL CIANOSEMAFORO ES VERDE, EN UNA SOLA GOTA DE AGUA BAJO EL MICROSCOPIO PODEMOS APRECIAR LA INMENSA BIODIVERSIDAD QUE ESCONDEN NUESTRAS LAGUNAS 💧 🌱";
             explanationText.style.position = "absolute";
             explanationText.style.left = "50%";
             explanationText.style.top = "60%";
@@ -1910,13 +1910,8 @@
             const returnButton = document.createElement('button');
             returnButton.className = 'return-button';
             returnButton.onclick = returnToLagoon;
-            returnButton.textContent = 'Volvamos a la laguna 🌊 😄';
+            returnButton.textContent = 'VOLVAMOS A LA LAGUNA 🌊 😄';
             labView.appendChild(returnButton);
-          } else if (lagoonStatus === "cianored.png") {
-            // Randomly choose between micro and plant views for red status
-            const showPlant = Math.random() < 0.5;
-            document.querySelectorAll('.microscope-container')[0].style.display = showPlant ? "none" : "flex";
-            document.querySelectorAll('.microscope-container')[1].style.display = showPlant ? "flex" : "none";
           }
         }, 1500); // Match this with the animation duration
       }
